@@ -7,6 +7,9 @@ fetch('/imgs/dataset.json')
     .then(r => {
         dataset = r;
         dispatchEvent(new Event('loadedDataset'));
+        const root = document.createElement('div');
+        root.id = 'root';
+        document.body.append(root);
     });
 
 window.handleImageLoad = (evt) => {
@@ -51,6 +54,7 @@ let counter = 0;
 
 addEventListener('renderNewFormula', () => {
     if (counter < dataset.total) {
+        document.getElementById('root').innerHTML = ''
         render(counter);
         counter++;
     }
