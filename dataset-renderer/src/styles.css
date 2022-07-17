@@ -1,8 +1,8 @@
 img.formula {
-    height: 2em;
     vertical-align: middle;
 }
 
 div#root {
     max-width: 960px;
+    text-align: justify;
 }
