@@ -41,7 +41,7 @@ function render(idx) {
     words = [...words.splice(0, splitIdx), image, ...words.splice(splitIdx, words.length - splitIdx - 1)];
 
     const text = words
-        .map((word, idx) => word + (Math.random() > 0.5 && idx !== words.length - 1 ? ',' : ''))
+        .map((word, idx) => word + (Math.random() > 0.9 && idx !== words.length - 1 ? ',' : ''))
         .join(' ') + '.';
 
     document.getElementById('root').innerHTML = text;
