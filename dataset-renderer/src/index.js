@@ -17,7 +17,9 @@ window.handleImageLoad = (evt) => {
         const img = document.getElementById('formula');
         if (img.naturalWidth > 0 && img.naturalHeight > 0) {
             clearInterval(interval);
-            dispatchEvent(new Event('renderDone'));
+            const r = document.createElement('span');
+            r.id = 'formula_done';
+            document.getElementById('root').append(r);
         }
     }, 20);
 }
@@ -52,10 +54,15 @@ function render(idx) {
 
 let counter = 0;
 
-addEventListener('renderNewFormula', () => {
+window.renderNewFormula = () => {
     if (counter < dataset.total) {
         document.getElementById('root').innerHTML = ''
         render(counter);
         counter++;
     }
-})
+}
+
+const root = document.createElement('div');
+root.id = 'root'
+
+document.body.append(root);

@@ -1,4 +1,5 @@
 import json
+import time
 
 from selenium import webdriver
 from PIL import Image
@@ -28,10 +29,8 @@ new_dataset = []
 def get_pos(elem):
     x = elem.location['x']
     y = elem.location['y']
-    w = elem.size['width']
-    h = root.size['height']
-    width = x + w
-    height = y + h
+    width = elem.size['width']
+    height = elem.size['height']
 
     return {
         "x": x,
@@ -51,25 +50,13 @@ def multiply_pos(pos, factor):
 
 
 for idx in range(0, dataset['total']):
-    driver.execute_script('dispatchEvent(new Event("renderNewFormula"))')
+    driver.execute_script('window.renderNewFormula()')
     formula = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "formula")))
 
     driver.save_screenshot(f'{args.out}/{idx}.png')
 
-    root_pos = get_pos(root)
-    formula_pos = get_pos(formula)
-
-    im = Image.open(f'{args.out}/{idx}.png')
-    im = im.crop((int(root_pos["x"]) * 2,
-                  int(root_pos["y"]) * 2,
-                  int(root_pos["width"]) * 2,
-                  int(root_pos["height"]) * 2))
-    im.save(f'{args.out}/{idx}.png')
-
-    formula_pos["width"] = formula_pos["width"] - root_pos["x"]
-    formula_pos["height"] = formula_pos["height"] - root_pos["y"]
-    formula_pos["x"] -= root_pos["x"]
-    formula_pos["y"] -= root_pos["y"]
+    root_pos = multiply_pos(get_pos(root), 2)
+    formula_pos = multiply_pos(get_pos(formula), 2)
 
     root_pos["width"] = root_pos["width"] - root_pos["x"]
     root_pos["height"] = root_pos["height"] - root_pos["y"]
@@ -77,9 +64,17 @@ for idx in range(0, dataset['total']):
     root_pos["y"] = 0
 
     new_dataset.append({
-        "file": f'{idx}.png',
-        "text": multiply_pos(root_pos, 2),
-        "formula": multiply_pos(formula_pos, 2)
+        "imagefilename": f'{idx}.png',
+        "annotation": [
+            {
+                "coordinates": root_pos,
+                "label": "text"
+            },
+            {
+                "coordinates": formula_pos,
+                "label": "formula"
+            }
+        ]
     })
     print(f"{idx}.png")
 
