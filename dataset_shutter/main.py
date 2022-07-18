@@ -59,11 +59,6 @@ for idx in range(0, dataset['total']):
     root_pos = multiply_pos(get_pos(root), 2)
     formula_pos = multiply_pos(get_pos(formula), 2)
 
-    root_pos["width"] = root_pos["width"] - root_pos["x"]
-    root_pos["height"] = root_pos["height"] - root_pos["y"]
-    root_pos["x"] = 0
-    root_pos["y"] = 0
-
     new_dataset.append({
         "imagefilename": f'{idx}.png',
         "annotation": [
