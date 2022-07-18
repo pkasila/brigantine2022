@@ -51,6 +51,7 @@ def multiply_pos(pos, factor):
 
 for idx in range(0, dataset['total']):
     driver.execute_script('window.renderNewFormula()')
+    WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "formula_done")))
     formula = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "formula")))
 
     driver.save_screenshot(f'{args.out}/{idx}.png')
