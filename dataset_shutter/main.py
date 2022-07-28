@@ -49,7 +49,7 @@ def multiply_pos(pos, factor):
     }
 
 
-for idx in range(0, dataset['total']):
+for idx in range(0, 100):
     driver.execute_script('window.renderNewFormula()')
     WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "formula_done")))
     formula = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "formula")))
@@ -59,16 +59,22 @@ for idx in range(0, dataset['total']):
     root_pos = multiply_pos(get_pos(root), 2)
     formula_pos = multiply_pos(get_pos(formula), 2)
 
+    im = Image.open(f'{args.out}/{idx}.png')
+    im = im.crop((0, 0,
+                  int(root_pos["width"]) + int(root_pos["x"] * 2),
+                  int(root_pos["height"]) + int(root_pos["y"] * 2)))
+    im.save(f'{args.out}/{idx}.png')
+
     new_dataset.append({
         "imagefilename": f'{idx}.png',
         "annotation": [
             {
-                "coordinates": root_pos,
-                "label": "text"
-            },
-            {
                 "coordinates": formula_pos,
                 "label": "formula"
+            },
+            {
+                "coordinates": root_pos,
+                "label": "text"
             }
         ]
     })
